@@ -8,7 +8,6 @@ namespace BlogSiteModels.Models
 {
     internal class Admin
     {
-        []
         public string AdminID { get; set; }
     }
 }
