@@ -1,0 +1,17 @@
+﻿@model Blog
+
+
+<form action="EditBlog" method="post">
+
+    <input value="@Model.BlogTitle" asp-for="BlogTitle" />
+    <br />
+    <input value="@Model.BlogDescription" asp-for="BlogDescription" />
+    <br />
+    <input value="@Model.BlogText" asp-for="BlogText" />
+
+
+    <button asp-route-id="@Model.BlogId" type="submit" class="btn btn-primary">Save</button>
+    <button asp-action="DeleteBlog" asp-route-id="@Model.BlogId">Delete</button>
+</form>
+
+

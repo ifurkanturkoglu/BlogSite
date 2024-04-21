@@ -1,0 +1,14 @@
+﻿@model Blog
+
+@if(TempData["Mesaj"] is not null)
+{
+    <span>@TempData["Mesaj"]</span>
+}
+
+<form asp-action="AddBlog" method="post">
+    Title: <input asp-for="BlogTitle"/>
+    BlogDescription: <input asp-for="BlogDescription"/>
+    BlogText : <input asp-for="BlogText"/>
+    BlogImageUrl : <input asp-for="ImageUrl"/>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

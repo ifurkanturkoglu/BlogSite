@@ -1,0 +1,5 @@
+﻿.blog {
+    display: flex;
+    background: rgb(225 225 225);
+    border-radius: 8px;
+}

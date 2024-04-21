@@ -1,0 +1,18 @@
+﻿@model List<Blog>
+
+<h1>Blogs</h1>
+
+@foreach (Blog item in Model)
+{
+    <div class="blog">
+        <div class="col-4">
+            <img src="@item.ImageUrl" />
+        </div>
+        <div class="col-8">
+            <h1>@item.BlogTitle</h1>
+            <br />
+            <span>@item.BlogDescription</span>
+            <a asp-action="EditBlog" asp-route-id="@item.BlogId">Edit</a>
+        </div>
+    </div>
+}
