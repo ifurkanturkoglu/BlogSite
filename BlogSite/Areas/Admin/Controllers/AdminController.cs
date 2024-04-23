@@ -1,4 +1,5 @@
 ﻿using BlogSiteModels.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
 
@@ -10,6 +11,7 @@ namespace BlogSite.Areas.Admin.Controllers
     /// </summary>
 
 
+    [Authorize(Roles ="Admin")]
     [Area("Admin")]
     public class AdminController : Controller
     {

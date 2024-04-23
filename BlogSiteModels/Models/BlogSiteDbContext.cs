@@ -41,6 +41,8 @@ public partial class BlogSiteDbContext : DbContext
             entity.Property(e => e.UserName).HasColumnName("UserName").HasMaxLength(48).IsRequired();
 
             entity.Property(e => e.Password).HasColumnName("UserPassword").HasMaxLength(24).IsRequired();
+            
+            entity.Property(e => e.Type).HasColumnName("UserType").HasConversion<String>().IsRequired();
         });
     }
 }

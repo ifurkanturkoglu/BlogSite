@@ -1,6 +1,7 @@
 ﻿using BlogSite.Models;
 using BlogSiteModels.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BlogSite.Controllers
 {
@@ -31,7 +32,15 @@ namespace BlogSite.Controllers
             {
                 ViewBag.Mesaj = "Giriş Başarılı..";
                 //Bu kısımda session yapılacak.
+                if(user.Type == UserType.Admin)
+                {
+                    List<Claim> claims = new List<Claim>();
 
+                    claims.Add(new Claim(ClaimTypes.Name, model.UserName));
+                    claims.Add(new Claim(ClaimTypes.Role, UserType.Admin.ToString()));
+                    //Burdan devam
+                    return RedirectToAction("Home", "Admin");
+                }
             }
 
             //Bu kısıma kullanıcı arayüzü açılacak.Blog ekleme kısmı.
@@ -55,7 +64,8 @@ namespace BlogSite.Controllers
             User user = new User()
             {
                 UserName = model.UserName,
-                Password = model.Password
+                Password = model.Password,
+                Type = UserType.User                
             };
 
 
