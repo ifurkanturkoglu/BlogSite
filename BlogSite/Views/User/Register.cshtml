@@ -1,14 +1,19 @@
 ﻿@model LoginViewModel
 
+<h1>Kayıt Ol</h1>
 
-<form action="Login" method="post">
+<form action="Register" method="post">
 
     <label>Kullanıcı Adı</label>
+    <br />
     <input asp-for="UserName" />
     <br />
     <label>Şifre</label>
+    <br />
     <input asp-for="Password" />
     <br />
-
-    <button class="btn btn-primary">Giriş</button>
+    <button class="btn btn-primary" type="submit">Kayıt Ol</button>
 </form>
+
+<br />
+@ViewBag.Mesaj

@@ -4,6 +4,12 @@ using System.Reflection.Metadata;
 
 namespace BlogSite.Areas.Admin.Controllers
 {
+
+    /// <summary>
+    /// /Loglama işlemlerini yap unutma!!!
+    /// </summary>
+
+
     [Area("Admin")]
     public class AdminController : Controller
     {
@@ -26,6 +32,13 @@ namespace BlogSite.Areas.Admin.Controllers
 
         [HttpPost]
         public IActionResult AddBlog(Blog blog) {
+
+            if(!ModelState.IsValid)
+            {
+                return View();
+            }
+
+
             Blog newBlog = new Blog()
             {
                 BlogText = blog.BlogText,

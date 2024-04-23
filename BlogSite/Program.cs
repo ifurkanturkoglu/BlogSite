@@ -1,4 +1,5 @@
 using BlogSiteModels.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthorization();
+
+builder.Services.AddFluentValidation(a => a.RegisterValidatorsFromAssemblyContaining<Program>());
 
 builder.Services.AddDbContext<BlogSiteDbContext>(
     options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection")

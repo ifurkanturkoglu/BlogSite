@@ -1,0 +1,18 @@
+﻿@model LoginViewModel
+
+
+
+
+<form action="Login" method="post">
+
+    <label>Kullanıcı Adı</label>
+    <input asp-for="UserName" />
+    <br />
+    <label>Şifre</label>
+    <input type="password" asp-for="Password" />
+    <br />
+    @ViewBag.Mesaj
+    <br />
+    <button class="btn btn-primary">Giriş</button>
+</form>
+

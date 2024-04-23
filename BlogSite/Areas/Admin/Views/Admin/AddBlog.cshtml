@@ -6,9 +6,32 @@
 }
 
 <form asp-action="AddBlog" method="post">
-    Title: <input asp-for="BlogTitle"/>
-    BlogDescription: <input asp-for="BlogDescription"/>
-    BlogText : <input asp-for="BlogText"/>
-    BlogImageUrl : <input asp-for="ImageUrl"/>
+    <label>Title</label>
+    <br />
+    <input asp-for="BlogTitle"/>
+    <br />
+    <span  asp-validation-for="BlogTitle"></span>
+    <br />
+    <label>BlogDescription</label>
+    <br />
+    <input asp-for="BlogDescription"/>
+    <br />
+    <span asp-validation-for="BlogDescription"></span>
+    <br />
+    <label>BlogText</label>
+    <br />
+    <input asp-for="BlogText"/>
+    <br />
+    <span asp-validation-for="BlogText"></span>
+    <br />
+    <label>BlogImageUrl</label>
+    <br />
+    <input asp-for="ImageUrl"/>
+    <br />
+    <span asp-validation-for="ImageUrl"></span>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
