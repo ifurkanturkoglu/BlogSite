@@ -37,12 +37,15 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles(); 
 
-app.UseAuthorization();
-app.UseAuthentication();
+
 
 app.UseCookiePolicy(cookiePolicyOptions);
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "admin",

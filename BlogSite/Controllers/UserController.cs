@@ -1,6 +1,9 @@
 ﻿using BlogSite.Models;
 using BlogSiteModels.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 
 namespace BlogSite.Controllers
@@ -19,7 +22,7 @@ namespace BlogSite.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             User user = context.Users.Where(a => a.UserName == model.UserName).FirstOrDefault();
 
@@ -32,20 +35,45 @@ namespace BlogSite.Controllers
             {
                 ViewBag.Mesaj = "Giriş Başarılı..";
                 //Bu kısımda session yapılacak.
+
+                bool IsCookieHave = CheckCookies();
+               
+
                 if(user.Type == UserType.Admin)
                 {
                     List<Claim> claims = new List<Claim>();
 
                     claims.Add(new Claim(ClaimTypes.Name, model.UserName));
                     claims.Add(new Claim(ClaimTypes.Role, UserType.Admin.ToString()));
-                    //Burdan devam
-                    return RedirectToAction("Home", "Admin");
+
+
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+                    AuthenticationProperties authProperties = new AuthenticationProperties()
+                    {
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(10),
+                        IsPersistent = true,
+                        RedirectUri = "/User/Login"
+                    };
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties
+                        );
+
+                    var cookieValue = Request.Cookies["Asp.NetCore.Cookies"];
+                    //Burdan devam cookilere iyice bak otomatik giriş yap. Beni hatırla olayı.
+                    return RedirectToAction("Home", "Admin",new {area = "Admin"});
                 }
             }
 
             //Bu kısıma kullanıcı arayüzü açılacak.Blog ekleme kısmı.
             return RedirectToAction();
         }
+
+        public bool CheckCookies()
+        {
+            return Response.Cookies is null;
+        }
+
 
         public IActionResult Register()
         {
