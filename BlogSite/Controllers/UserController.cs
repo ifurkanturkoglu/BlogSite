@@ -11,16 +11,22 @@ namespace BlogSite.Controllers
     public class UserController : Controller
     {
         BlogSiteDbContext context;
+
+        List<Claim> claims = new List<Claim>();
+
         public UserController(BlogSiteDbContext _context)
         {
 
             context = _context;
 
         }
+
+
         public IActionResult Login()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -34,48 +40,79 @@ namespace BlogSite.Controllers
             else if (user.Password.Equals(model.Password))
             {
                 ViewBag.Mesaj = "Giriş Başarılı..";
-                //Bu kısımda session yapılacak.
 
-                bool IsCookieHave = CheckCookies();
-               
+                claims.Add(new Claim(ClaimTypes.Role, (user.Type == UserType.Admin ? UserType.Admin : UserType.User).ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, model.UserName));
 
-                if(user.Type == UserType.Admin)
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                AuthenticationProperties authProperties = new AuthenticationProperties()
                 {
-                    List<Claim> claims = new List<Claim>();
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddYears(1),
+                    IsPersistent =false,
+                    RedirectUri = "/User/Login"
+                };
 
-                    claims.Add(new Claim(ClaimTypes.Name, model.UserName));
-                    claims.Add(new Claim(ClaimTypes.Role, UserType.Admin.ToString()));
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties
+                    );
 
-
-
-                    
-
-                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
-                    AuthenticationProperties authProperties = new AuthenticationProperties()
-                    {
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-                        IsPersistent = true,
-                        RedirectUri = "/User/Login"
-                    };
-
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties
-                        );
-
-                    Response.Cookies.Append("deneme", "cookie",new CookieOptions
-                    {
-                        Expires = DateTime.Now.AddMinutes(10)
-                    });
-
-                    
-                    //Burdan devam cookilere iyice bak otomatik giriş yap. Beni hatırla olayı.
-                    return RedirectToAction("Home", "Admin",new {area = "Admin"});
+                if (user.Type == UserType.Admin)
+                {
+                    return RedirectToAction("Home", "Admin", new { area = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Home", "User");
                 }
             }
-
-            //Bu kısıma kullanıcı arayüzü açılacak.Blog ekleme kısmı.
             return RedirectToAction();
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Login(LoginViewModel model)
+        //{
+        //    User user = context.Users.Where(a => a.UserName == model.UserName).FirstOrDefault();
+
+        //    if (user == null)
+        //    {
+        //        ViewBag.Mesaj = "Kayıtlı kullanıcı bulunamadı.";
+        //        return View();
+        //    }
+        //    else if (user.Password.Equals(model.Password))
+        //    {
+        //        ViewBag.Mesaj = "Giriş Başarılı..";
+        //        //Bu kısımda session yapılacak.
+
+
+        //            claims.Add(new Claim(ClaimTypes.Role, (user.Type == UserType.Admin ? UserType.Admin : UserType.User).ToString()));
+        //            claims.Add(new Claim(ClaimTypes.Name, model.UserName));
+
+        //            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+        //        if (model.SaveLogin)
+        //        {
+        //            AuthenticationProperties authProperties = new AuthenticationProperties()
+        //            {
+        //                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+        //                IsPersistent = true,
+        //                RedirectUri = "/User/Login"
+        //            };
+        //            await HttpContext.SignInAsync(
+        //                CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties
+        //                );
+        //        }
+
+        //        return RedirectToAction("Home", "Admin", new { area = "Admin" });
+        //        //Burdan devam cookilere iyice bak otomatik giriş yap. Beni hatırla olayı.
+
+
+        //    }
+
+        //    //Bu kısıma kullanıcı arayüzü açılacak.Blog ekleme kısmı.
+        //    return RedirectToAction();
+        //}
 
         public bool CheckCookies()
         {
@@ -101,7 +138,7 @@ namespace BlogSite.Controllers
             {
                 UserName = model.UserName,
                 Password = model.Password,
-                Type = UserType.User                
+                Type = UserType.User
             };
 
 
@@ -110,7 +147,7 @@ namespace BlogSite.Controllers
                 context.Users.Add(user);
                 int result = context.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.Mesaj = "Kayıt oluşturulamadı.";
                 return View();
