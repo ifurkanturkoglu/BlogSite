@@ -47,10 +47,13 @@ namespace BlogSite.Controllers
                     claims.Add(new Claim(ClaimTypes.Role, UserType.Admin.ToString()));
 
 
+
+                    
+
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
                     AuthenticationProperties authProperties = new AuthenticationProperties()
                     {
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(10),
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                         IsPersistent = true,
                         RedirectUri = "/User/Login"
                     };
@@ -59,7 +62,12 @@ namespace BlogSite.Controllers
                         CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties
                         );
 
-                    var cookieValue = Request.Cookies["Asp.NetCore.Cookies"];
+                    Response.Cookies.Append("deneme", "cookie",new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddMinutes(10)
+                    });
+
+                    
                     //Burdan devam cookilere iyice bak otomatik giriş yap. Beni hatırla olayı.
                     return RedirectToAction("Home", "Admin",new {area = "Admin"});
                 }

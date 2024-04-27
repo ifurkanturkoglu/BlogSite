@@ -23,6 +23,8 @@ namespace BlogSite.Areas.Admin.Controllers
 
         public IActionResult Home()
         {
+            string deneme;
+            var a = Request.Cookies.TryGetValue("deneme",out deneme);
             return View();
         }
 

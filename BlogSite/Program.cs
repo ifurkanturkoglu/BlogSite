@@ -14,7 +14,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.AccessDeniedPath = "/Admin";
+        options.AccessDeniedPath = "/AuthError";
+        options.LoginPath = "/User/Login";
+        options.LogoutPath = "/Blogs/BlogList";
     });
 
 builder.Services.AddFluentValidation(a => a.RegisterValidatorsFromAssemblyContaining<Program>());
@@ -47,13 +49,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.MapControllerRoute(
-    name: "admin",
-    pattern: "{area}/{controller}/{action}/{id?}"
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("/AuthError", async context =>
+        await context.Response.WriteAsync("Yetkilendirilmemiþ kullanýcý eriþimi.")
     );
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Blogs}/{action=BlogsList}/{id?}");
+    endpoints.MapControllerRoute(
+        name: "admin",
+        pattern: "{area}/{controller}/{action}/{id?}"
+    );
+
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Blogs}/{action=BlogsList}/{id?}");
+});
+
 
 app.Run();
