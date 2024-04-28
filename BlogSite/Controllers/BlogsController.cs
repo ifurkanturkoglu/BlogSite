@@ -12,6 +12,7 @@ namespace BlogSite.Controllers
 
         public IActionResult GetBlog(int id)
         {
+            //route sadece id değil ayrıca kullanıcı adını da aalabilir. Ona bi bak
             try
             {
                 Blog blog = context.Blogs.FirstOrDefault(a => a.BlogId == id);

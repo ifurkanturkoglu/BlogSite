@@ -1,6 +1,7 @@
 ﻿using BlogSiteModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
 namespace BlogSite.Areas.Admin.Controllers
@@ -35,6 +36,8 @@ namespace BlogSite.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AddBlog(Blog blog) {
 
+            //Hangi kullanıcının bloguna eklendiğini yap. Burda kaldın ekleme işlemi patlıyor.
+
             if(!ModelState.IsValid)
             {
                 return View();
@@ -62,7 +65,7 @@ namespace BlogSite.Areas.Admin.Controllers
 
         public IActionResult BlogsList()
         {
-            List<Blog> blogList = context.Blogs.ToList();
+            List<Blog> blogList = context.Blogs.Include(a=> a.User).ThenInclude(a=> a.UserBlogs).ToList();
             return View(blogList);
         }
 
