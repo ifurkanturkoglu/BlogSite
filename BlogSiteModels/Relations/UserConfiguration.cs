@@ -15,7 +15,7 @@ namespace BlogSiteModels.Relations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasMany(a => a.UserBlogs).WithOne(a => a.User).HasForeignKey(a => a.UserID).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(a => a.UserBlogs).WithOne(a => a.User).HasForeignKey(a => a.UserID).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
 
             builder.Property(e => e.UserID).HasColumnName("UserID").ValueGeneratedOnAdd();
 
@@ -24,8 +24,6 @@ namespace BlogSiteModels.Relations
             builder.Property(e => e.Password).HasColumnName("UserPassword").HasMaxLength(24).IsRequired();
 
             builder.Property(e => e.Type).HasColumnName("UserType").HasConversion<String>().IsRequired();
-
         }
-
     }
 }

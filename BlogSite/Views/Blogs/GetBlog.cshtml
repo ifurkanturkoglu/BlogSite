@@ -1,4 +1,4 @@
-﻿@model Blog
+﻿@model BlogViewModel
 
 
 <h1>BLOGGGG</h1>
@@ -7,3 +7,7 @@
 <h1>@Model.BlogTitle</h1>
 <h5>@Model.BlogDescription</h5>
 <span>@Model.BlogText</span>
+
+<label>Yazar</label>
+<br />
+<span @Model.BlogWriter style="color:red"></span>

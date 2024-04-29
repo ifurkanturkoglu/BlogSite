@@ -20,7 +20,42 @@ namespace BlogSite.Controllers
             context = _context;
 
         }
+        public IActionResult Register()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult Register(LoginViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Mesaj = "İlgili alanları belirtilen kurallara göre doldurun.";
+                return View();
+            }
+            User user = new User()
+            {
+                UserName = model.UserName,
+                Password = model.Password,
+                Type = UserType.User
+            };
+
+
+            try
+            {
+                context.Users.Add(user);
+                int result = context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mesaj = "Kayıt oluşturulamadı.";
+                return View();
+            }
+
+            return RedirectToAction(nameof(Login));
+
+        }
         public IActionResult Login()
         {
             return View();
@@ -61,48 +96,17 @@ namespace BlogSite.Controllers
                 await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties
                         );
-                return RedirectToAction("Home", "Admin", new { area = "Admin" });
+                return RedirectToAction("Home", "Admin", new { area = "Admin"});
                 //Burdan devam cookilere iyice bak otomatik giriş yap. Beni hatırla olayı.
             }
             //Bu kısıma kullanıcı arayüzü açılacak.Blog ekleme kısmı.
             return RedirectToAction();
         }
 
-        public IActionResult Register()
+        public async Task<IActionResult> SignOut()
         {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Register(LoginViewModel model)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Mesaj = "İlgili alanları belirtilen kurallara göre doldurun.";
-                return View();
-            }
-            User user = new User()
-            {
-                UserName = model.UserName,
-                Password = model.Password,
-                Type = UserType.User
-            };
-
-
-            try
-            {
-                context.Users.Add(user);
-                int result = context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Mesaj = "Kayıt oluşturulamadı.";
-                return View();
-            }
-
-            return RedirectToAction(nameof(Login));
-
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
         }
     }
 }

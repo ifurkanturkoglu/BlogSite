@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogSiteModels.Migrations
 {
     [DbContext(typeof(BlogSiteDbContext))]
-    [Migration("20240428182213_Initial")]
+    [Migration("20240429113124_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -102,8 +102,7 @@ namespace BlogSiteModels.Migrations
                     b.HasOne("BlogSiteModels.Models.User", "User")
                         .WithMany("UserBlogs")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });

@@ -99,8 +99,7 @@ namespace BlogSiteModels.Migrations
                     b.HasOne("BlogSiteModels.Models.User", "User")
                         .WithMany("UserBlogs")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });

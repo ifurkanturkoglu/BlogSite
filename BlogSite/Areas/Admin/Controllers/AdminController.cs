@@ -1,4 +1,5 @@
-﻿using BlogSiteModels.Models;
+﻿using BlogSite.Models;
+using BlogSiteModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,6 @@ namespace BlogSite.Areas.Admin.Controllers
 
 
     [Authorize(Roles ="Admin")]
-    [Area("Admin")]
     public class AdminController : Controller
     {
         BlogSiteDbContext context;
@@ -22,9 +22,9 @@ namespace BlogSite.Areas.Admin.Controllers
             context = _context;
         }
 
-        public IActionResult Home()
+        public IActionResult Home(LoginViewModel model)
         {
-            return View();
+            return View(model);
         }
 
         
@@ -34,24 +34,30 @@ namespace BlogSite.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddBlog(Blog blog) {
+        public IActionResult AddBlog(BlogViewModel blog) {
 
-            //Hangi kullanıcının bloguna eklendiğini yap. Burda kaldın ekleme işlemi patlıyor.
+            User user = context.Users.Include(a=> a.UserBlogs).Where(a=> a.UserName == User.Identity.Name).FirstOrDefault();
+            if(user != null)
+            {
+                blog.BlogWriter = user.UserName;
+            }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View();
             }
-
 
             Blog newBlog = new Blog()
             {
                 BlogText = blog.BlogText,
                 BlogDescription = blog.BlogDescription,
                 BlogTitle = blog.BlogTitle,
-                ImageUrl = blog.ImageUrl                
+                ImageUrl = blog.ImageUrl,
+                UserID = user.UserID
             };
-            context.Add(newBlog);
+
+            user.UserBlogs.Add(newBlog);
+
             int result = context.SaveChanges();
 
             if(result == 0)
@@ -59,29 +65,30 @@ namespace BlogSite.Areas.Admin.Controllers
                 ViewBag.Mesaj = "Ekleme Başarısız";
                 return View();
             }
+
             TempData["Mesaj"] = "Ekleme Başarılı";
             return RedirectToAction(nameof(AddBlog));
         }
 
         public IActionResult BlogsList()
         {
-            List<Blog> blogList = context.Blogs.Include(a=> a.User).ThenInclude(a=> a.UserBlogs).ToList();
+            List<Blog> blogList = context.Blogs.Include(a=> a.User).ThenInclude(a=> a.UserBlogs).Where(a=> a.User.UserName == User.Identity.Name).ToList();
             return View(blogList);
         }
 
 
         public IActionResult EditBlog(int id)
         {
-            Blog blog = context.Blogs.Where(a=> a.BlogId==id).FirstOrDefault();
+            Blog blog = GetUserBlog(id);
             return View(blog);
         }
 
         [HttpPost]
         public IActionResult EditBLog(int id,Blog blog)
         {
-            Blog editedBlog = context.Blogs.Where(a => a.BlogId == id).FirstOrDefault();
+            Blog editedBlog = GetUserBlog(id);
 
-            if(editedBlog == null)
+            if (editedBlog == null)
             {
                 return RedirectToAction(nameof(BlogsList));
             }
@@ -97,7 +104,7 @@ namespace BlogSite.Areas.Admin.Controllers
 
         public IActionResult DeleteBlog(int id)
         {
-            Blog blog = context.Blogs.Where(a=> a.BlogId == id).FirstOrDefault();
+            Blog blog = GetUserBlog(id);
 
             context.Remove(blog);
             int result =  context.SaveChanges();
@@ -109,6 +116,11 @@ namespace BlogSite.Areas.Admin.Controllers
             }
 
             return RedirectToAction(nameof(BlogsList));
+        }
+
+        Blog GetUserBlog(int id)
+        {
+            return context.Blogs.Include(a => a.User).ThenInclude(a => a.UserBlogs).Where(a => a.BlogId == id).FirstOrDefault();
         }
     }
 }

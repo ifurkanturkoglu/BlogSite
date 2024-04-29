@@ -10,6 +10,11 @@ var cookiePolicyOptions = new CookiePolicyOptions { MinimumSameSitePolicy = Same
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession(a =>
+{
+    a.Cookie.Name = "UserSession";
+    a.IdleTimeout = TimeSpan.FromMinutes(5);
+});
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -37,8 +42,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles(); 
-
+app.UseStaticFiles();
+app.UseSession();
 
 
 app.UseCookiePolicy(cookiePolicyOptions);
