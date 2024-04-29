@@ -11,6 +11,6 @@
         public string BlogText { get; set; } = null!;
 
         public string ImageUrl { get; set; } = null!;
-        public string BlogWriter { get; set; } = null!;
+        public string? BlogWriter { get; set; }
     }
 }

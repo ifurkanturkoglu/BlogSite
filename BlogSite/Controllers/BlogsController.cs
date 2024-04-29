@@ -16,7 +16,7 @@ namespace BlogSite.Controllers
             //route sadece id değil ayrıca kullanıcı adını da aalabilir. Ona bi bak
             try
             {
-                BlogViewModel blog = context.Blogs.Where(a => a.UserID == id).Select(b => new BlogViewModel
+                BlogViewModel blog = context.Blogs.Where(a => a.BlogId == id).Select(b => new BlogViewModel
                 {
                     BlogTitle = b.BlogTitle,
                     BlogDescription = b.BlogDescription,
@@ -24,6 +24,7 @@ namespace BlogSite.Controllers
                     BlogWriter = b.User.UserName,
                     ImageUrl = b.ImageUrl,
                 }).FirstOrDefault();
+
                 return View(blog);
             }
             catch
