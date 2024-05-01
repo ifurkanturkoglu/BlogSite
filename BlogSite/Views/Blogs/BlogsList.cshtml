@@ -1,8 +1,8 @@
-﻿@model List<BlogViewModel>
+﻿@model List<BlogViewViewModel>
 
 <h1>Blogs</h1>
 
-@foreach (BlogViewModel item in Model)
+@* @foreach (BlogViewModel item in Model)
 {
     <div class="blog">
         <div class="col-4">
@@ -19,4 +19,19 @@
             <a asp-action="GetBlog" asp-route-id="@item.BlogId">İncele</a>
         </div>
     </div>
-}
+} *@
+
+
+<div class="blogTable">
+    @foreach(BlogViewViewModel item in Model){
+        <a class="blog" asp-action="GetBlog" asp-route-id="@item.BlogId">
+            <img src="@item.ImageUrl"/>
+            <div class="blogText">
+                <p>@item.BlogTitle</p>
+                <span>@item.BlogDescription</span>
+                <span>@item.BlogWriter</span>
+            </div>
+        </a>
+    }
+    
+</div>

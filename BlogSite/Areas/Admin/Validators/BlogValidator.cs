@@ -23,8 +23,6 @@ namespace BlogSite.Areas.Admin.Validators
                 .MaximumLength(3000)
                 .WithMessage("3000 karakterden fazla girmeyin");
 
-            RuleFor(a => a.ImageUrl).MaximumLength(200);
-
         }
     }
 }

@@ -1,22 +1,101 @@
-html {
-  font-size: 14px;
+header {
+    display: inline-flex;
+    height: 100px;
+    width: 100%;
+    background-color: rgb(22, 54, 99);
+    transition: .5s all ease;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    header:hover {
+        height: 150px;
+        transition: .5s all ease;
+    }
+
+    header .logo img {
+        height: 100%;
+        width: 256px;
+        padding: 8px;
+    }
+
+    header .menu {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        padding-right: 64px;
+        color: white;
+    }
+
+        header .menu a {
+            font-size: 18px;
+            padding: 12px;
+            color: white;
+        }
+
+            header .menu a:hover {
+                font-size: 20px;
+                color: rgb(150, 182, 228);
+            }
+
+    header .menuButton {
+        display: none;
+    }
+
+        header .menuButton button {
+            height: 48px;
+            width: 48px;
+            right: 16px;
+            top: 24px;
+            position: absolute;
+            color: white;
+            padding: 0;
+            background-color: transparent;
+            border: 1px solid white;
+            border-radius: 8px;
+        }
+
+        header .menuButton i {
+            font-size: 32px;
+        }
+
+
+    header .mobileMenu {
+        height: 350px;
+        width: 100%;
+        display: none;
+        background-color: black;
+        transition: .5s all ease;
+    }
+
+    header .login {
+        text-align: center;
+    }
+
+        header .login button {
+            background-color: bisque;
+            color: blue;
+            border: none;
+            font-size: 18px;
+        }
+
+footer {
+    position: absolute;
+    bottom: 0;
+    background-color: rgb(22, 54, 99);
+    height: 100px;
+    width: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: end;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
 
-html {
-  position: relative;
-  min-height: 100%;
-}
+@media only screen and (max-width:576px) {
+    header .menu {
+        display: none;
+    }
 
-body {
-  margin-bottom: 60px;
+    header .menuButton {
+        display: initial;
+    }
 }

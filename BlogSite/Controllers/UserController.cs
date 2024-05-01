@@ -106,7 +106,7 @@ namespace BlogSite.Controllers
         public async Task<IActionResult> SignOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
+            return RedirectToAction("Login","User",new { area = ""});
         }
     }
 }

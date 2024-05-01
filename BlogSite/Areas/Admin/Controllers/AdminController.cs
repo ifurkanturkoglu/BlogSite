@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
 
 namespace BlogSite.Areas.Admin.Controllers
 {
@@ -13,7 +14,7 @@ namespace BlogSite.Areas.Admin.Controllers
     /// </summary>
 
 
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         BlogSiteDbContext context;
@@ -27,32 +28,33 @@ namespace BlogSite.Areas.Admin.Controllers
             return View(model);
         }
 
-        
+
         public IActionResult AddBlog()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult AddBlog(BlogViewModel blog) {
+        public async Task<IActionResult> AddBlog(BlogAddViewModel blog)
+        {
 
-            User user = context.Users.Include(a=> a.UserBlogs).Where(a=> a.UserName == User.Identity.Name).FirstOrDefault();
-            if(user != null)
+            User user = context.Users.Include(a => a.UserBlogs).Where(a => a.UserName == User.Identity.Name).FirstOrDefault();
+            if (user != null)
             {
                 blog.BlogWriter = user.UserName;
             }
-
+            string path = await ImageUpload(blog.Image);
             if (!ModelState.IsValid)
             {
                 return View();
             }
-
+            
             Blog newBlog = new Blog()
             {
                 BlogText = blog.BlogText,
                 BlogDescription = blog.BlogDescription,
                 BlogTitle = blog.BlogTitle,
-                ImageUrl = blog.ImageUrl,
+                ImageUrl = path.Substring(7),
                 UserID = user.UserID
             };
 
@@ -60,7 +62,7 @@ namespace BlogSite.Areas.Admin.Controllers
 
             int result = context.SaveChanges();
 
-            if(result == 0)
+            if (result == 0)
             {
                 ViewBag.Mesaj = "Ekleme Başarısız";
                 return View();
@@ -70,9 +72,26 @@ namespace BlogSite.Areas.Admin.Controllers
             return RedirectToAction(nameof(AddBlog));
         }
 
+        public async Task<string> ImageUpload(IFormFile file)
+        {
+            if (file == null)
+            {
+                ViewBag.Mesaj = "Resim yüklenemedi.";
+                return "";
+            }
+
+            var path = Path.Combine("wwwroot/img/", file.FileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return path;
+        }
+
         public IActionResult BlogsList()
         {
-            List<Blog> blogList = context.Blogs.Include(a=> a.User).ThenInclude(a=> a.UserBlogs).Where(a=> a.User.UserName == User.Identity.Name).ToList();
+            List<Blog> blogList = context.Blogs.Include(a => a.User).ThenInclude(a => a.UserBlogs).Where(a => a.User.UserName == User.Identity.Name).ToList();
             return View(blogList);
         }
 
@@ -84,7 +103,7 @@ namespace BlogSite.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditBLog(int id,Blog blog)
+        public IActionResult EditBLog(int id, Blog blog)
         {
             Blog editedBlog = GetUserBlog(id);
 
@@ -107,9 +126,9 @@ namespace BlogSite.Areas.Admin.Controllers
             Blog blog = GetUserBlog(id);
 
             context.Remove(blog);
-            int result =  context.SaveChanges();
-            
-            if(result == 0)
+            int result = context.SaveChanges();
+
+            if (result == 0)
             {
                 ViewBag.Mesaj = "Silme işlemi başarısız.";
                 return View("BlogsList.cshtml");

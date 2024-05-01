@@ -1,11 +1,11 @@
-﻿@model Blog
+﻿@model BlogAddViewModel
 
 @if(TempData["Mesaj"] is not null)
 {
     <span>@TempData["Mesaj"]</span>
 }
 
-<form asp-action="AddBlog" method="post">
+<form asp-action="AddBlog" method="post" enctype="multipart/form-data">
     <label>Title</label>
     <br />
     <input asp-for="BlogTitle"/>
@@ -24,11 +24,11 @@
     <br />
     <span asp-validation-for="BlogText"></span>
     <br />
-    <label>BlogImageUrl</label>
+    <label>BlogImage</label>
     <br />
-    <input asp-for="ImageUrl"/>
+    <input type="file" accept="image/*" asp-for="Image"/>
     <br />
-    <span asp-validation-for="ImageUrl"></span>
+    
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
 

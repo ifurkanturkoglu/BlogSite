@@ -1,6 +1,6 @@
 ﻿namespace BlogSite.Models
 {
-    public class BlogViewModel
+    public class BlogViewViewModel
     {
         public int BlogId { get; set; }
 

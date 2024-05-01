@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/BlogsList.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true">
+
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Paneli</h2>
+        <ul>
+            <li> <a asp-action="BlogsList" asp-controller="Admin">Bloglarım</a></li>
+            <li> <a asp-action="AddBlog" asp-controller="Admin">Blog Ekle</a></li>
+        </ul>
+       
+        <a asp-action="SignOut" asp-controller="User">Çıkış Yap</a>
+    </div>
+    <div class="content">
+        @RenderBody()
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

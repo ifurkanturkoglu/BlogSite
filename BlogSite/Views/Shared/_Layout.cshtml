@@ -11,25 +11,23 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BlogSite</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+        <div class="logo col-6">
+            <img src="https://www.egoistyazar.com/upload/images/posts/ademin-yaratılışı.png" alt="">
+        </div>
+        <div class="menu col-4 ">
+            <div class="menuItems">
+                <a asp-action="BlogsList" asp-controller="Blogs">Blogs</a>
             </div>
-        </nav>
+        </div>
+        <div class="col-1 login">
+            <a asp-action="Login" asp-controller="User"><button>Giriş Yap</button></a>
+        </div>
+        <div class="col-1 login">
+            <a asp-action="Register" asp-controller="User"><button>Kayıt Ol</button></a>
+        </div>
+        <div class="menuButton ">
+            <button> <i class="fa-solid fa-bars"></i></button>
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BlogSiteModels.Models;
 
@@ -13,7 +14,7 @@ public partial class Blog
 
     public string BlogText { get; set; } = null!;
 
-    public string ImageUrl { get; set; } = null!;
+    public string ImageUrl { get; set; }
     public int UserID { get; set; }
     public User User { get; set; }
 }

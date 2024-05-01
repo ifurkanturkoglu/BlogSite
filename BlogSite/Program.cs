@@ -3,18 +3,28 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var cookiePolicyOptions = new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Strict };
 
+//Log.Logger = new LoggerConfiguration().WriteTo.MSSqlServer(
+//    connectionString:""
+
+//    );
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
 builder.Services.AddSession(a =>
 {
     a.Cookie.Name = "UserSession";
     a.IdleTimeout = TimeSpan.FromMinutes(5);
 });
+
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -26,9 +36,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddFluentValidation(a => a.RegisterValidatorsFromAssemblyContaining<Program>());
 
+
+
 builder.Services.AddDbContext<BlogSiteDbContext>(
     options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection")
     );
+
+
+
+
 
 var app = builder.Build();
 
@@ -44,7 +60,6 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseSession();
-
 
 app.UseCookiePolicy(cookiePolicyOptions);
 

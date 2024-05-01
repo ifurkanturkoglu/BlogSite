@@ -3,3 +3,39 @@
     background: rgb(225 225 225);
     border-radius: 8px;
 }
+
+.blogTable {
+    margin: auto;
+    padding: 32px;
+}
+
+    .blogTable .blog {
+        display: inline-flex;
+        align-items: center;
+        width: 100%;
+        text-decoration: none;
+        color: inherit;
+    }
+
+        .blogTable .blog:hover {
+            background: #afb2c0;
+        }
+
+            .blogTable .blog:hover > img, .blogText {
+                height: 160px;
+                transition: .5s all ease;
+            }
+
+        .blogTable .blog img {
+            height: 128px;
+            transition: .5s all ease;
+        }
+
+        .blogTable .blog .blogText {
+            height: 128px;
+            padding-left: 16px;
+            transition: .5s all ease;
+        }
+
+        
+
