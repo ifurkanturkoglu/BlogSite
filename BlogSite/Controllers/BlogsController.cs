@@ -50,8 +50,13 @@ namespace BlogSite.Controllers
 
 
             ViewBag.PageCount = Math.Ceiling((double)context.Blogs.Count()/4);
-
+            ViewBag.CurrentPage = page;
             return View(blogs);
+        }
+
+        public int PagingCalcPageNumber(int increasedObject,int increaceRate)
+        {
+            return increasedObject + increaceRate;
         }
     }
 }

@@ -64,26 +64,27 @@
  *@
 @{
     int totalPageCount = (int)ViewBag.PageCount;
-    int currentPage = 1;
+    int currentPage = ViewBag.CurrentPage;
     int startPage = (currentPage - 1) > 0 ? (currentPage - 1) : 1;
-    int endPage = (currentPage + 1) <= totalPageCount ? (currentPage + 1) : totalPageCount;
+    int endPage = (currentPage + 2) <= totalPageCount ? (currentPage + 2) : totalPageCount;
 }
 
 <div class="pagination">
-    @if (currentPage > 1)
-    {
-        @(currentPage - 1)
-        <a asp-action="BlogsList" asp-route-page="@(currentPage-1)">«</a>
-    }
-    @for (int i = currentPage; i <= endPage; i++)
-    {
-        //arttırma işlemi yapılmalı
-         <a asp-action="BlogsList" asp-route-page="@i" class="active">@i</a>
-        
-    }
-    @if (currentPage < totalPageCount)
-    {
-        <a asp-action="BlogsList" asp-route-page="@(currentPage+1)">»</a>
+    @{
+        if (currentPage > 1)
+        {
+            currentPage -= 1;
+            <a asp-action="BlogsList" asp-route-page="@currentPage">«</a>
+        }
+        for (int i = currentPage; i <= endPage; i++)
+        {
+            <a asp-action="BlogsList" asp-route-page="@i" class="@(currentPage == i ? "active" : "")">@i</a>
+        }
+        if (currentPage < totalPageCount)
+        {
+            currentPage += 1;
+            <a asp-action="BlogsList" asp-route-page="@currentPage">»</a>
+        }
     }
 </div>
 
