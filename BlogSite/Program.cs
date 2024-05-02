@@ -83,6 +83,8 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Blogs}/{action=BlogsList}/{id?}");
+
+    
 });
 
 

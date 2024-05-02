@@ -100,7 +100,7 @@ namespace BlogSite.Controllers
                 //Burdan devam cookilere iyice bak otomatik giriş yap. Beni hatırla olayı.
             }
             //Bu kısıma kullanıcı arayüzü açılacak.Blog ekleme kısmı.
-            return RedirectToAction();
+            return View();
         }
 
         public async Task<IActionResult> SignOut()

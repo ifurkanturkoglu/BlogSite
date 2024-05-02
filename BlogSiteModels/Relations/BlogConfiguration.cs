@@ -22,6 +22,8 @@ namespace BlogSiteModels.Relations
             builder.Property(e => e.BlogDescription).HasColumnName("BlogDescription").HasMaxLength(300).IsRequired();
 
             builder.Property(e => e.ImageUrl).HasColumnName("ImageUrl");
+
+            builder.Property(e => e.BlogAddDate).HasColumnName("BlogAddDate").IsRequired();
         }
     }
 }

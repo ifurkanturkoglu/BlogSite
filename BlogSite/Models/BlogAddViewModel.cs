@@ -9,7 +9,7 @@
         public string BlogDescription { get; set; } = null!;
 
         public string BlogText { get; set; } = null!;
-
+        public DateTime? BlogDateTime { get; set; }
         public IFormFile Image { get; set; } = null!;
         public string? BlogWriter { get; set; }
     }

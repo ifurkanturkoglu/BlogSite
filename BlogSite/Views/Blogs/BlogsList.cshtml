@@ -1,4 +1,4 @@
-﻿@model List<BlogViewViewModel>
+﻿@model IQueryable<BlogViewViewModel>
 
 <h1>Blogs</h1>
 
@@ -23,15 +23,67 @@
 
 
 <div class="blogTable">
-    @foreach(BlogViewViewModel item in Model){
+    @foreach (BlogViewViewModel item in Model)
+    {
         <a class="blog" asp-action="GetBlog" asp-route-id="@item.BlogId">
-            <img src="@item.ImageUrl"/>
+            <img src="@item.ImageUrl" />
             <div class="blogText">
-                <p>@item.BlogTitle</p>
-                <span>@item.BlogDescription</span>
-                <span>@item.BlogWriter</span>
+                <p class="blogTitle">@item.BlogTitle</p>
+                <span class="blogDescription">@item.BlogDescription</span>
+                <span class="blogWriter">@item.BlogWriter</span>
             </div>
         </a>
     }
     
 </div>
+
+
+@* @{
+    int totalPageCount = (int)ViewBag.PageCount;
+    int currentPage = 1; 
+    int startPage = (currentPage - 1) > 0 ? (currentPage - 1) : 1;
+    int endPage = (currentPage + 1) <= totalPageCount ? (currentPage + 1) : totalPageCount;
+}
+
+<div class="pagination">
+    @if (currentPage > 1)
+    {
+        <a asp-action="BlogsList" asp-route-page="@currentPage-1">«</a>
+    }
+    @for (int i = startPage; i <= endPage; i++)
+    {
+        
+         <a asp-action="BlogsList" asp-route-page="@i">@i</a>
+        
+    }
+    @if (currentPage < totalPageCount)
+    {
+        <a asp-action="BlogsList" asp-route-page="@currentPage+1">»</a>
+    }
+</div>
+ *@
+@{
+    int totalPageCount = (int)ViewBag.PageCount;
+    int currentPage = 1;
+    int startPage = (currentPage - 1) > 0 ? (currentPage - 1) : 1;
+    int endPage = (currentPage + 1) <= totalPageCount ? (currentPage + 1) : totalPageCount;
+}
+
+<div class="pagination">
+    @if (currentPage > 1)
+    {
+        @(currentPage - 1)
+        <a asp-action="BlogsList" asp-route-page="@(currentPage-1)">«</a>
+    }
+    @for (int i = currentPage; i <= endPage; i++)
+    {
+        //arttırma işlemi yapılmalı
+         <a asp-action="BlogsList" asp-route-page="@i" class="active">@i</a>
+        
+    }
+    @if (currentPage < totalPageCount)
+    {
+        <a asp-action="BlogsList" asp-route-page="@(currentPage+1)">»</a>
+    }
+</div>
+

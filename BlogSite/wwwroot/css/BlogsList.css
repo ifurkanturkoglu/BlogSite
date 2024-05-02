@@ -3,13 +3,17 @@
     background: rgb(225 225 225);
     border-radius: 8px;
 }
+.blogImage{
+    height:400px;
 
+}
 .blogTable {
     margin: auto;
     padding: 32px;
 }
 
     .blogTable .blog {
+        position:relative;
         display: inline-flex;
         align-items: center;
         width: 100%;
@@ -32,10 +36,60 @@
         }
 
         .blogTable .blog .blogText {
+            display: inline-grid;
+            white-space:pre-wrap;
+            word-wrap: break-word;
+            overflow:hidden;
             height: 128px;
             padding-left: 16px;
             transition: .5s all ease;
         }
+            .blogTable .blog .blogText .blogWriter {
+                position: absolute;
+                right: 24px;
+                bottom: 12px;
+            }
+            .blogTable .blog .blogText .blogDescription {
+                height: 100%;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 120ch;
+                max-height: 8ch;
+            }
+            .blogTable .blog .blogText .blogTitle{
+                margin:0!important;
+            }
 
-        
+.pagination {
+    display: inline-block;
+}
 
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+
+.getBlog {
+    position:relative;
+
+}
+    .getBlog .blogWriter {
+        position: absolute;
+        right: 64px;
+        line-height:48px;
+    } 

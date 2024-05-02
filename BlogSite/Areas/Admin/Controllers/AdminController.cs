@@ -48,14 +48,15 @@ namespace BlogSite.Areas.Admin.Controllers
             {
                 return View();
             }
-            
+
             Blog newBlog = new Blog()
             {
                 BlogText = blog.BlogText,
                 BlogDescription = blog.BlogDescription,
                 BlogTitle = blog.BlogTitle,
                 ImageUrl = path.Substring(7),
-                UserID = user.UserID
+                UserID = user.UserID,
+                BlogAddDate = DateTime.Now
             };
 
             user.UserBlogs.Add(newBlog);

@@ -34,9 +34,11 @@ namespace BlogSite.Controllers
             
         }
         //DTO yapılacak
-        public IActionResult BlogsList()
+        public IActionResult BlogsList(int page)
         {
-            List<BlogViewViewModel> blogs = context.Blogs.Select(a => new BlogViewViewModel
+            if (page == 0)
+                page = 1;
+            IQueryable<BlogViewViewModel> blogs = context.Blogs.OrderByDescending(a => a.BlogAddDate).Skip((page-1)*4).Select(a => new BlogViewViewModel
             {
                 BlogId = a.BlogId,
                 BlogTitle = a.BlogTitle,
@@ -44,8 +46,10 @@ namespace BlogSite.Controllers
                 BlogText = a.BlogText,
                 ImageUrl = a.ImageUrl,
                 BlogWriter = a.User.UserName
-            }).ToList();
-            
+            }).Take(4);
+
+
+            ViewBag.PageCount = Math.Ceiling((double)context.Blogs.Count()/4);
 
             return View(blogs);
         }

@@ -14,6 +14,7 @@ public partial class Blog
 
     public string BlogText { get; set; } = null!;
 
+    public DateTime BlogAddDate { get; set; }
     public string ImageUrl { get; set; }
     public int UserID { get; set; }
     public User User { get; set; }

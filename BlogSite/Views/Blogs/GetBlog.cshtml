@@ -1,13 +1,18 @@
 ﻿@model BlogViewViewModel
 
+<div class="getBlog">
+    <h1>@Model.BlogTitle</h1>
+    <br />
 
-<h1>BLOGGGG</h1>
+    <img class="blogImage" src="@Model.ImageUrl" />
 
-<img src="@Model.ImageUrl"/>
-<h1>@Model.BlogTitle</h1>
-<h5>@Model.BlogDescription</h5>
-<span>@Model.BlogText</span>
+    <h5>@Model.BlogDescription</h5>
+    <span>@Model.BlogText</span>
 
-<label>Yazar</label>
-<br />
-<span style="color:red">@Model.BlogWriter</span>
+    <div class="blogWriter">
+        <label>Yazar</label>
+        <br />
+        <span style="color:red">@Model.BlogWriter</span>
+    </div>
+
+</div>
