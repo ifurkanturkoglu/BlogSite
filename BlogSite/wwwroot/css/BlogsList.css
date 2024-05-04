@@ -64,6 +64,7 @@
 
 .pagination {
     display: inline-block;
+    margin-left:45%;
 }
 
     .pagination a {
