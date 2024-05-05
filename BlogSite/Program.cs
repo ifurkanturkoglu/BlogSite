@@ -1,3 +1,4 @@
+using BlogSite.Services;
 using BlogSiteModels.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,11 +19,15 @@ var cookiePolicyOptions = new CookiePolicyOptions { MinimumSameSitePolicy = Same
 builder.Services.AddControllersWithViews();
 
 
-builder.Services.AddSession(a =>
-{
-    a.Cookie.Name = "UserSession";
-    a.IdleTimeout = TimeSpan.FromMinutes(5);
-});
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<AuthenticationService>();
+
+//builder.Services.AddSession(a =>
+//{
+//    a.Cookie.Name = "UserSession";
+//    a.IdleTimeout = TimeSpan.FromMinutes(5);
+//});
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -59,7 +64,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-app.UseSession();
+//app.UseSession();
 
 app.UseCookiePolicy(cookiePolicyOptions);
 
@@ -82,7 +87,7 @@ app.UseEndpoints(endpoints =>
 
     endpoints.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Blogs}/{action=BlogsList}/{id?}");
+        pattern: "{controller=Blogs}/{action=BlogsList}/{id:int?}");
 
     
 });

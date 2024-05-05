@@ -2,6 +2,7 @@
 using BlogSiteModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
@@ -13,7 +14,7 @@ namespace BlogSite.Areas.Admin.Controllers
     /// /Loglama işlemlerini yap unutma!!!
     /// </summary>
 
-
+    [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
@@ -39,16 +40,13 @@ namespace BlogSite.Areas.Admin.Controllers
         {
 
             User user = context.Users.Include(a => a.UserBlogs).Where(a => a.UserName == User.Identity.Name).FirstOrDefault();
-            if (user != null)
-            {
-                blog.BlogWriter = user.UserName;
-            }
+            
             string path = await ImageUpload(blog.Image);
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || user == null)
             {
                 return View();
             }
-
+            //blog.BlogWriter = user.UserName;
             Blog newBlog = new Blog()
             {
                 BlogText = blog.BlogText,
@@ -141,6 +139,27 @@ namespace BlogSite.Areas.Admin.Controllers
         Blog GetUserBlog(int id)
         {
             return context.Blogs.Include(a => a.User).ThenInclude(a => a.UserBlogs).Where(a => a.BlogId == id).FirstOrDefault();
+        }
+
+        [HttpPost]
+        [ActionName("GetBlog")]
+        [Route("/Blogs/GetBlog/{id}")]
+        public IActionResult AddComment(int id,[FromBody]Comment model)
+        {
+
+            Comment newComment = new Comment()
+            {
+                BlogId = id,
+                CommentText = model.CommentText,
+                UserId = context.Users.Where(a => a.UserName == User.Identity.Name).Select(a => a.UserID).FirstOrDefault(),
+                CommentAddTime = model.CommentAddTime
+            };
+
+            context.Comments.Add(newComment);
+            context.SaveChanges();
+            //Comment blog = context.Blogs.Where(a=> a.BlogId == id).Include(a => a.Comments)   alt yorum eklerken bak
+
+            return Json(new {newComment = newComment.CommentText});
         }
     }
 }

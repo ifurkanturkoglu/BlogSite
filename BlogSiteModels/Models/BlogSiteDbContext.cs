@@ -13,6 +13,7 @@ public partial class BlogSiteDbContext : DbContext
     }
     public virtual DbSet<Blog> Blogs { get; set; }
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Comment> Comments { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

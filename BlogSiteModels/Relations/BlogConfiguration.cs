@@ -13,6 +13,8 @@ namespace BlogSiteModels.Relations
     {
         public void Configure(EntityTypeBuilder<Blog> builder)
         {
+            builder.HasMany(a => a.Comments).WithOne(a => a.Blog).HasForeignKey(a => a.BlogId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
+
             builder.Property(e => e.BlogId).HasColumnName("BlogID").ValueGeneratedOnAdd();
 
             builder.Property(e => e.BlogText).HasColumnName("BlogText").HasMaxLength(3000).IsRequired();

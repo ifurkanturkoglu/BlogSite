@@ -66,11 +66,12 @@ header {
         transition: .5s all ease;
     }
 
-    header .login {
+    header .loginButtons .login {
         text-align: center;
+        display:contents;
     }
 
-        header .login button {
+        header .loginButtons .login button {
             background-color: bisque;
             color: blue;
             border: none;

@@ -1,5 +1,6 @@
-﻿@model BlogViewViewModel
-
+﻿@using BlogSite.Services
+@model BlogAndCommentViewModel
+@inject AuthenticationService authService
 <div class="getBlog">
     <h1>@Model.BlogTitle</h1>
     <br />
@@ -15,4 +16,68 @@
         <span style="color:red">@Model.BlogWriter</span>
     </div>
 
+    <div id="commentList" class="comments-section">
+        @foreach(CommentViewModel item in Model.Comments)
+        {
+            //alt yorum sistemini yap
+            <label>@item.CommentWriter</label>
+            <br />
+            <label>@item.CommentText</label>
+            <br />
+            <span>@item.CommentAddTime</span>
+            <br />
+        }
+    </div>
+
+    @if (authService.UserIsAuthenticate())
+    {
+        <div class="comment-section">
+            <h2>Yorum Yap</h2>
+            <form id="comment">
+                <textarea id="commentText" name="comment" placeholder="Yorum" required></textarea>
+                <button type="submit">Gönder</button>
+            </form>
+        </div>
+    }
+    @if(!authService.UserIsAuthenticate()){
+        <h1>Yorum yapmak için giriş yapmalısınız!</h1>
+    }
+   
 </div>
+
+<script>
+    var jq = jQuery.noConflict();
+
+    jq(document).ready(function () {
+        jq('#comment').on('submit', function (event) {
+            event.preventDefault();
+
+            var commentText = jq('#commentText').val();
+            var commentWriter = jq('#commentWriter').val();
+            var commentAddTime = new Date();
+
+            jq.ajax({
+                url: '@Url.Action("GetBlog", "Blogs")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    commentText: commentText,
+                    commentWriter: commentWriter,
+                    commentAddTime: commentAddTime.toISOString()
+                }),
+                success: function (data) {
+
+                    var newComment = jq('<div>').addClass("comment")
+                    newComment.append(jq('<p>').addClass("username").text(commentWriter));
+                    newComment.append(jq('<p>').addClass("comment-text").text(commentText));
+                    newComment.append(jq('<p>').addClass("comment-date").text(commentAddTime));
+                    jq('#commentList').append(newComment);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+

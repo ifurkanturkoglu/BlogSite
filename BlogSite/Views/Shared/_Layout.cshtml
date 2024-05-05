@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using BlogSite.Services
+@inject AuthenticationService authService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,6 +11,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BlogSite.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/BlogsList.css" asp-append-version="true" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <header>
@@ -19,12 +23,28 @@
                 <a asp-action="BlogsList" asp-controller="Blogs">Blogs</a>
             </div>
         </div>
-        <div class="col-1 login">
-            <a asp-action="Login" asp-controller="User"><button>Giriş Yap</button></a>
-        </div>
-        <div class="col-1 login">
-            <a asp-action="Register" asp-controller="User"><button>Kayıt Ol</button></a>
-        </div>
+
+        
+        @if (!authService.UserIsAuthenticate())
+        {
+            <div class="loginButtons">
+                <div class="col-1 login">
+                    <a asp-action="Login" asp-controller="User"><button>Giriş Yap</button></a>
+                </div>
+                <div class="col-1 login">
+                    <a asp-action="Register" asp-controller="User"><button>Kayıt Ol</button></a>
+                </div>
+            </div>
+        }
+        @if (authService.UserIsAuthenticate())
+        {
+            <div class="loginButtons">
+                <div class="col-1 login">
+                    <a asp-action="Home" asp-controller="Admin" asp-area="Admin"><button>Admin Panel</button></a>
+                </div>
+            </div>
+        }
+
         <div class="menuButton ">
             <button> <i class="fa-solid fa-bars"></i></button>
         </div>

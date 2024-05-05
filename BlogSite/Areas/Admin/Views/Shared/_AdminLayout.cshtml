@@ -16,8 +16,9 @@
             <li> <a asp-action="BlogsList" asp-controller="Admin">Bloglarım</a></li>
             <li> <a asp-action="AddBlog" asp-controller="Admin">Blog Ekle</a></li>
         </ul>
-       
-        <a asp-action="SignOut" asp-controller="User">Çıkış Yap</a>
+        
+        <a asp-action="SignOut" asp-controller="User" asp-area="">Çıkış Yap</a>
+        <a asp-action="BlogsList" asp-controller="Blogs" asp-area="">Anasayfa</a>
     </div>
     <div class="content">
         @RenderBody()

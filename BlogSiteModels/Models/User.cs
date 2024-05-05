@@ -13,7 +13,7 @@ namespace BlogSiteModels.Models
         public string Password { get; set; }
         public UserType Type { get; set; }
         public ICollection<Blog>? UserBlogs { get; set; }
-
+        public ICollection<Comment> Comments { get; set; }
     }
 
     public enum UserType

@@ -3,17 +3,18 @@
     background: rgb(225 225 225);
     border-radius: 8px;
 }
-.blogImage{
-    height:400px;
 
+.blogImage {
+    height: 400px;
 }
+
 .blogTable {
     margin: auto;
     padding: 32px;
 }
 
     .blogTable .blog {
-        position:relative;
+        position: relative;
         display: inline-flex;
         align-items: center;
         width: 100%;
@@ -37,18 +38,20 @@
 
         .blogTable .blog .blogText {
             display: inline-grid;
-            white-space:pre-wrap;
+            white-space: pre-wrap;
             word-wrap: break-word;
-            overflow:hidden;
+            overflow: hidden;
             height: 128px;
             padding-left: 16px;
             transition: .5s all ease;
         }
+
             .blogTable .blog .blogText .blogWriter {
                 position: absolute;
                 right: 24px;
                 bottom: 12px;
             }
+
             .blogTable .blog .blogText .blogDescription {
                 height: 100%;
                 white-space: pre-wrap;
@@ -58,13 +61,14 @@
                 max-width: 120ch;
                 max-height: 8ch;
             }
-            .blogTable .blog .blogText .blogTitle{
-                margin:0!important;
+
+            .blogTable .blog .blogText .blogTitle {
+                margin: 0 !important;
             }
 
 .pagination {
     display: inline-block;
-    margin-left:45%;
+    margin-left: 45%;
 }
 
     .pagination a {
@@ -86,11 +90,73 @@
 
 
 .getBlog {
-    position:relative;
-
+    position: relative;
 }
+
     .getBlog .blogWriter {
         position: absolute;
         right: 64px;
-        line-height:48px;
-    } 
+        line-height: 48px;
+    }
+
+.comment-section {
+    width: 100%;
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+
+    .comment-section h2 {
+        color: #333;
+    }
+
+    .comment-section form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .comment-section input, .comment-section textarea {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .comment-section button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+    }
+
+
+.comments-section {
+    width: 100%;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+    .comments-section .comment {
+        border-bottom: 1px solid #dee2e6;
+        padding: 10px 0;
+    }
+
+    .comments-section.username {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .comments-section.comment-text {
+        margin-top: 5px;
+        color: #495057;
+    }
+
+    .comments-section.comment-date {
+        font-size: 0.8em;
+        color: #6c757d;
+    }
