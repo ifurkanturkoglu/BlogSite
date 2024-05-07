@@ -1,6 +1,7 @@
 ﻿@using BlogSite.Services
 @model BlogAndCommentViewModel
 @inject AuthenticationService authService
+
 <div class="getBlog">
     <h1>@Model.BlogTitle</h1>
     <br />
@@ -17,15 +18,34 @@
     </div>
 
     <div id="commentList" class="comments-section">
-        @foreach(CommentViewModel item in Model.Comments)
+        @foreach (CommentViewModel item in Model.Comments)
         {
-            //alt yorum sistemini yap
-            <label>@item.CommentWriter</label>
-            <br />
-            <label>@item.CommentText</label>
-            <br />
-            <span>@item.CommentAddTime</span>
-            <br />
+            <div class="comment">
+
+
+                //alt yorum sistemini yap
+                <label>@item.CommentWriter</label>
+                <br />
+                <label>@item.CommentText</label>
+                <br />
+                <span>@item.CommentAddTime</span>
+                <br />
+                <button onclick="commentAnswerToggle(@item.CommentId)">Yanıtla</button>
+
+
+                @*<partial name="_Comment" model="@item" />*@
+                
+
+                @foreach (var answer in item.CommentAnswers)
+                {
+                    <div id="subComment" class="subComment">
+                        <label>---------------</label>
+                        <br />
+                        <label>@answer.CommentText</label>
+                        <a asp-action="AddCommentAnswer" asp-controller="Admin" asp-area="Admin" asp-route-id="@answer.CommentId"></a>
+                    </div>
+                }
+            </div>
         }
     </div>
 
@@ -34,16 +54,34 @@
         <div class="comment-section">
             <h2>Yorum Yap</h2>
             <form id="comment">
-                <textarea id="commentText" name="comment" placeholder="Yorum" required></textarea>
+                <textarea asp-for="BlogText" id="commentText" name="comment" placeholder="Yorum" required></textarea>
                 <button type="submit">Gönder</button>
             </form>
         </div>
     }
-    @if(!authService.UserIsAuthenticate()){
+    @if (!authService.UserIsAuthenticate())
+    {
         <h1>Yorum yapmak için giriş yapmalısınız!</h1>
     }
-   
+
 </div>
+
+
+<script>
+    function commentAnswerToggle(itemId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Blogs/CommentAnswer/' + itemId,
+            success: function (data) {
+                $("#subComment").html(data);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+</script>
 
 <script>
     var jq = jQuery.noConflict();

@@ -1,4 +1,6 @@
-﻿namespace BlogSite.Models
+﻿using BlogSiteModels.Models;
+
+namespace BlogSite.Models
 {
     public class CommentViewModel
     {
@@ -6,5 +8,7 @@
         public string CommentWriter { get; set; }
         public string CommentText { get; set; }
         public string CommentAddTime { get; set; }
+        public ICollection<Comment>? CommentAnswers { get; set; }
+
     }
 }

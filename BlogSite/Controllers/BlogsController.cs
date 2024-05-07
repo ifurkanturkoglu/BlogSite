@@ -26,10 +26,11 @@ namespace BlogSite.Controllers
                     BlogWriter = b.User.UserName,
                     ImageUrl = b.ImageUrl,
                     Comments = b.Comments.Select(a => new CommentViewModel{
-                        CommentId = id,
+                        CommentId = a.CommentId,
                         CommentText = a.CommentText,
                         CommentWriter = context.Users.Where(b => b.UserID == a.UserId).FirstOrDefault().UserName.ToString(),
-                        CommentAddTime = a.CommentAddTime.ToString("dd/MM/yyyy HH:MM:ss")
+                        CommentAddTime = a.CommentAddTime.ToString("dd/MM/yyyy HH:MM:ss"),
+                        CommentAnswers = a.CommentAnswers
                     }).ToList()
 
                 }).FirstOrDefault();
@@ -61,6 +62,16 @@ namespace BlogSite.Controllers
             ViewBag.PageCount = Math.Ceiling((double)context.Blogs.Count() / 4);
             ViewBag.CurrentPage = page;
             return View(blogs);
+        }
+
+        public IActionResult CommentAnswer(int id)
+        {
+            CommentViewModel answeredComment = context.Comments.Where(a => a.CommentId == id).Select(new CommentViewModel
+            {
+                CommentId = id,
+                CommentText = 
+            }).FirstOrDefault();
+            return PartialView("_Comment",answeredComment);
         }
     }
 }

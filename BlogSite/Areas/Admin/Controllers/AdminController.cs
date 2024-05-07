@@ -161,5 +161,30 @@ namespace BlogSite.Areas.Admin.Controllers
 
             return Json(new {newComment = newComment.CommentText});
         }
+
+        [HttpPost]
+        [ActionName("GetBlog")]
+        public IActionResult AddCommentAnswer(int id,[FromBody]Comment model)
+        {
+            Comment answeredComment = context.Comments.Where(a => a.CommentId == id).FirstOrDefault();
+
+            if (answeredComment != null)
+            {
+                Comment newComment = new Comment()
+                {
+                    BlogId = context.Comments.Include(a=> a.Blog).Where(a => a.CommentId == id).Select(a => a.BlogId).First(),
+                    CommentText = model.CommentText,
+                    UserId = context.Users.Where(a => a.UserName == User.Identity.Name).Select(a => a.UserID).FirstOrDefault(),
+                    CommentAddTime = model.CommentAddTime,
+                    ParentCommentId = id
+                };
+
+                context.Comments.Add(newComment);
+                context.SaveChanges();
+            }
+            return Json(new { success = answeredComment == null });
+        }
+
+
     }
 }
