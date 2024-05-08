@@ -163,8 +163,7 @@ namespace BlogSite.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionName("GetBlog")]
-        public IActionResult AddCommentAnswer(int id,[FromBody]Comment model)
+        public IActionResult AddCommentAnswer(int id,Comment model)
         {
             Comment answeredComment = context.Comments.Where(a => a.CommentId == id).FirstOrDefault();
 

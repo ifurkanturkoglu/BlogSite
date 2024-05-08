@@ -8,6 +8,7 @@ namespace BlogSite.Models
         public string CommentWriter { get; set; }
         public string CommentText { get; set; }
         public string CommentAddTime { get; set; }
+        public int? ParentCommentId { get; set; }
         public ICollection<Comment>? CommentAnswers { get; set; }
 
     }

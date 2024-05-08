@@ -25,11 +25,13 @@ namespace BlogSite.Controllers
                     BlogText = b.BlogText,
                     BlogWriter = b.User.UserName,
                     ImageUrl = b.ImageUrl,
-                    Comments = b.Comments.Select(a => new CommentViewModel{
+                    Comments = b.Comments.Select(a => new CommentViewModel
+                    {
                         CommentId = a.CommentId,
                         CommentText = a.CommentText,
-                        CommentWriter = context.Users.Where(b => b.UserID == a.UserId).FirstOrDefault().UserName.ToString(),
-                        CommentAddTime = a.CommentAddTime.ToString("dd/MM/yyyy HH:MM:ss"),
+                        CommentWriter = context.Users.Where(c => c.UserID == a.UserId).FirstOrDefault().UserName.ToString(),
+                        CommentAddTime = a.CommentAddTime.ToString("dd/MM/yyyy HH:MM:ss"),                        
+                        ParentCommentId = a.ParentCommentId,
                         CommentAnswers = a.CommentAnswers
                     }).ToList()
 
@@ -66,12 +68,17 @@ namespace BlogSite.Controllers
 
         public IActionResult CommentAnswer(int id)
         {
-            CommentViewModel answeredComment = context.Comments.Where(a => a.CommentId == id).Select(new CommentViewModel
-            {
-                CommentId = id,
-                CommentText = 
-            }).FirstOrDefault();
-            return PartialView("_Comment",answeredComment);
+            CommentViewModel answeredComment = context.Comments
+                .Where(a => a.CommentId == id)
+                .Select(a => new CommentViewModel
+                {
+                    CommentId = id,
+                    CommentText = "",
+                    CommentWriter = User.Identity.Name,
+                    CommentAddTime = DateTime.Now.ToString("dd:mm:yyyy ss:mm:hh"),
+                    ParentCommentId = a.ParentCommentId
+                }).FirstOrDefault();
+            return PartialView("_Comment", answeredComment);
         }
     }
 }

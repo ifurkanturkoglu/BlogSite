@@ -1,6 +1,7 @@
 ﻿@model CommentViewModel
 
-<form id="comment">
-    <textarea asp-for="CommentText" id="commentText" name="comment" placeholder="Yorum" required></textarea>
+
+<form id="comment" method="post">
+    <textarea asp-for="CommentText" id="commentText" name="CommentText" placeholder="Yorum" required></textarea>
     <button asp-action="AddCommentAnswer" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.CommentId" type="submit">Gönder</button>
 </form>

@@ -18,34 +18,45 @@
     </div>
 
     <div id="commentList" class="comments-section">
+
         @foreach (CommentViewModel item in Model.Comments)
         {
-            <div class="comment">
+            @if (item.ParentCommentId == null)
+            {
+                <div class="comment">
 
 
-                //alt yorum sistemini yap
-                <label>@item.CommentWriter</label>
-                <br />
-                <label>@item.CommentText</label>
-                <br />
-                <span>@item.CommentAddTime</span>
-                <br />
-                <button onclick="commentAnswerToggle(@item.CommentId)">Yanıtla</button>
+                    <label>@item.CommentWriter</label>
+                    <br />
+                    <label>@item.CommentText</label>
+                    <br />
+                    <span>@item.CommentAddTime</span>
+                    <br />
+                    <button onclick="toggleFunctions(@item.CommentId)">Yanıtla</button>
 
-
-                @*<partial name="_Comment" model="@item" />*@
-                
-
-                @foreach (var answer in item.CommentAnswers)
-                {
-                    <div id="subComment" class="subComment">
-                        <label>---------------</label>
-                        <br />
-                        <label>@answer.CommentText</label>
-                        <a asp-action="AddCommentAnswer" asp-controller="Admin" asp-area="Admin" asp-route-id="@answer.CommentId"></a>
+                    <div id="subAnswer_@item.CommentId" style="display:none">
                     </div>
-                }
-            </div>
+                    @foreach (var answer in item.CommentAnswers)
+                    {
+                        <div id="subComment" class="subComment">
+                            <label>---------------</label>
+                            <br />
+                            <label>@answer</label>
+                            <br />
+                            <label>@answer.CommentText</label>
+                            <button onclick="toggleFunctions(@answer.CommentId)">Yanıtla</button>
+                            <div id="subAnswer_@answer.CommentId" style="display:none">
+
+                            </div>
+                            @foreach (var subAnswer in RenderRecursiveComment(answer.CommentAnswers))
+                            {
+                                @subAnswer
+                            }
+                        </div>
+                    }
+
+                </div>
+            }
         }
     </div>
 
@@ -67,19 +78,71 @@
 </div>
 
 
+@functions {
+
+
+    IEnumerable<object> RenderRecursiveComment(ICollection<Comment> comments)
+    {
+        @if (comments != null)
+        {
+
+
+            @foreach (var answer in comments)
+            {
+                <div id="subComment" class="subComment">
+                    <label>---------------</label>
+                    <br />
+                    <label>@answer.UserId</label>
+                    <br />
+                    <label>@answer.CommentText</label>
+                    <button onclick="toggleFunctions(@answer.CommentId)">Yanıtla</button>
+                    <div id="subAnswer_@answer.CommentId" style="display:none">
+                    </div>
+                    @if (answer.CommentAnswers != null && answer.CommentAnswers.Any())
+                    {
+                        foreach (var subAnswer in RenderRecursiveComment(answer.CommentAnswers))
+                        {
+                            yield return subAnswer;
+                        }
+                    }
+                </div>
+            }
+        }
+    }
+}
+
 <script>
+    function toggleSubAnswer(id) {
+        var subAnswerDiv = document.getElementById("subAnswer_" + id);
+        console.log("subAnswer_" + id);
+        subAnswerDiv.style.display = subAnswerDiv.style.display == "none" ? "block" : "none";
+    }
+
+</script>
+
+<script>
+    function toggleFunctions(id) {
+        toggleSubAnswer(id);
+        commentAnswerToggle(id)
+    }
+
+</script>
+
+<script>
+    console.log("girdi");
     function commentAnswerToggle(itemId) {
         $.ajax({
             type: 'GET',
             url: '/Blogs/CommentAnswer/' + itemId,
             success: function (data) {
-                $("#subComment").html(data);
+                $("#subAnswer_" + itemId).html(data);
             },
             error: function (xhr, status, error) {
                 console.error(xhr.responseText);
             }
         });
     }
+
 
 </script>
 
