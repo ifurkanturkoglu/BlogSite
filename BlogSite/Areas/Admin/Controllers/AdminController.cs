@@ -40,7 +40,7 @@ namespace BlogSite.Areas.Admin.Controllers
         {
 
             User user = context.Users.Include(a => a.UserBlogs).Where(a => a.UserName == User.Identity.Name).FirstOrDefault();
-            
+
             string path = await ImageUpload(blog.Image);
             if (!ModelState.IsValid || user == null)
             {
@@ -95,6 +95,9 @@ namespace BlogSite.Areas.Admin.Controllers
         }
 
 
+
+
+
         public IActionResult EditBlog(int id)
         {
             Blog blog = GetUserBlog(id);
@@ -120,6 +123,7 @@ namespace BlogSite.Areas.Admin.Controllers
             return View(editedBlog);
         }
 
+
         public IActionResult DeleteBlog(int id)
         {
             Blog blog = GetUserBlog(id);
@@ -144,7 +148,7 @@ namespace BlogSite.Areas.Admin.Controllers
         [HttpPost]
         [ActionName("GetBlog")]
         [Route("/Blogs/GetBlog/{id}")]
-        public IActionResult AddComment(int id,[FromBody]Comment model)
+        public IActionResult AddComment(int id, [FromBody] Comment model)
         {
 
             Comment newComment = new Comment()
@@ -159,11 +163,11 @@ namespace BlogSite.Areas.Admin.Controllers
             context.SaveChanges();
             //Comment blog = context.Blogs.Where(a=> a.BlogId == id).Include(a => a.Comments)   alt yorum eklerken bak
 
-            return Json(new {newComment = newComment.CommentText});
+            return Json(new { newComment = newComment.CommentText });
         }
 
         [HttpPost]
-        public IActionResult AddCommentAnswer(int id,Comment model)
+        public IActionResult AddCommentAnswer(int id, Comment model)
         {
             Comment answeredComment = context.Comments.Where(a => a.CommentId == id).FirstOrDefault();
 
@@ -171,19 +175,82 @@ namespace BlogSite.Areas.Admin.Controllers
             {
                 Comment newComment = new Comment()
                 {
-                    BlogId = context.Comments.Include(a=> a.Blog).Where(a => a.CommentId == id).Select(a => a.BlogId).First(),
+                    BlogId = context.Comments.Include(a => a.Blog).Where(a => a.CommentId == id).Select(a => a.BlogId).First(),
                     CommentText = model.CommentText,
                     UserId = context.Users.Where(a => a.UserName == User.Identity.Name).Select(a => a.UserID).FirstOrDefault(),
                     CommentAddTime = model.CommentAddTime,
                     ParentCommentId = id
                 };
 
+                answeredComment.CommentAnswers?.Add(newComment);
                 context.Comments.Add(newComment);
                 context.SaveChanges();
             }
             return Json(new { success = answeredComment == null });
         }
+        public IActionResult UserCommentsList()
+        {
+            List<CommentViewModel> comments = context.Comments
+                .Include(a => a.User)
+                .ThenInclude(b => b.Comments)
+                .Where(c => c.User.UserName == User.Identity.Name).Select(d => new CommentViewModel
+                {
+                    CommentId = d.CommentId,
+                    CommentText = d.CommentText,
+                    CommentWriter = d.User.UserName,
+                    CommentAddTime = d.CommentAddTime.ToString("dd.mm.yyyy ss:mm:hh"),
+                    CommentAnswers = d.CommentAnswers,
+                    ParentCommentId = d.ParentCommentId
+                })
+                .ToList();
 
+            return View(comments);
+        }
+
+
+        public IActionResult UserDeleteComment(int id)
+        {
+            Comment comment = context.Comments.Where(a => a.CommentId == id).FirstOrDefault();
+
+            List<Comment> commentAnswers = context.Comments.Include(a => a.CommentAnswers).ThenInclude(b => b.CommentAnswers).Where(b => b.CommentId == id).ToList();
+            
+            if (comment == null)
+            {
+                return Json("yorum bulunamadı");
+            }
+
+            if (comment != null)
+            {
+                DeleteSubComment(comment);
+            }
+
+            context.Comments.Remove(comment);
+
+            int result = context.SaveChanges();
+
+            if (result == 0)
+            {
+                Json("yorum silinemedi");
+            }
+
+            return RedirectToAction("UserCommentsList", "Admin");
+
+        }
+
+        public void DeleteSubComment(Comment comment)
+        {
+            if (comment.CommentAnswers == null)
+            {
+                context.Comments.Remove(comment);
+                return;
+            }
+
+            foreach (Comment item in comment.CommentAnswers)
+            {
+                DeleteSubComment(item);
+            }
+            context.Comments.Remove(comment);
+        }
 
     }
 }

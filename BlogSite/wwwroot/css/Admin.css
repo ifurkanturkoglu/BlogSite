@@ -20,3 +20,13 @@ h2{
 img{
     height:200px;
 }
+
+.adminBlogList{
+    position:relative;
+
+}
+.adminBlogList .deleteBtn{
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+}

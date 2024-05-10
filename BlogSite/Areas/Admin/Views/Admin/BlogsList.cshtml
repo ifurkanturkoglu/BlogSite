@@ -8,11 +8,12 @@
         <div class="col-4">
             <img src="@item.ImageUrl" />
         </div>
-        <div class="col-8">
+        <div class="col-8 adminBlogList">
             <h1>@item.BlogTitle</h1>
             <br />
             <span>@item.BlogDescription</span>
             <a asp-action="EditBlog" asp-route-id="@item.BlogId">Edit</a>
+            <a  class="deleteBtn btn btn-danger" asp-route-id="@item.BlogId" asp-action="DeleteBlog" asp-controller="Admin" asp-area="Admin">Sil</a>
         </div>
     </div>
 }
