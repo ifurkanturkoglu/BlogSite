@@ -46,7 +46,6 @@ namespace BlogSite.Areas.Admin.Controllers
             {
                 return View();
             }
-            //blog.BlogWriter = user.UserName;
             Blog newBlog = new Blog()
             {
                 BlogText = blog.BlogText,
@@ -54,7 +53,7 @@ namespace BlogSite.Areas.Admin.Controllers
                 BlogTitle = blog.BlogTitle,
                 ImageUrl = path.Substring(7),
                 UserID = user.UserID,
-                BlogAddDate = DateTime.Now
+                BlogAddDate = DateTime.Now,
             };
 
             user.UserBlogs.Add(newBlog);
@@ -94,10 +93,6 @@ namespace BlogSite.Areas.Admin.Controllers
             return View(blogList);
         }
 
-
-
-
-
         public IActionResult EditBlog(int id)
         {
             Blog blog = GetUserBlog(id);
@@ -128,6 +123,15 @@ namespace BlogSite.Areas.Admin.Controllers
         {
             Blog blog = GetUserBlog(id);
 
+            if (!string.IsNullOrEmpty(blog.ImageUrl))
+            {
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", blog.ImageUrl.TrimStart('/'));
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
             context.Remove(blog);
             int result = context.SaveChanges();
 
@@ -136,6 +140,8 @@ namespace BlogSite.Areas.Admin.Controllers
                 ViewBag.Mesaj = "Silme işlemi başarısız.";
                 return View("BlogsList.cshtml");
             }
+
+
 
             return RedirectToAction(nameof(BlogsList));
         }
@@ -213,7 +219,7 @@ namespace BlogSite.Areas.Admin.Controllers
             Comment comment = context.Comments.Where(a => a.CommentId == id).FirstOrDefault();
 
             List<Comment> commentAnswers = context.Comments.Include(a => a.CommentAnswers).ThenInclude(b => b.CommentAnswers).Where(b => b.CommentId == id).ToList();
-            
+
             if (comment == null)
             {
                 return Json("yorum bulunamadı");

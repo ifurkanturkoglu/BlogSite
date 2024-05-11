@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogSiteModels.Migrations
 {
     [DbContext(typeof(BlogSiteDbContext))]
-    [Migration("20240502115945_BlogModelUpdate")]
+    [Migration("20240511110944_BlogModelUpdate")]
     partial class BlogModelUpdate
     {
         /// <inheritdoc />
@@ -56,10 +56,19 @@ namespace BlogSiteModels.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("BlogTitle");
 
+                    b.Property<int>("DislikeCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ImageUrl");
+
+                    b.Property<int>("LikeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("DislikeCount");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
@@ -68,7 +77,50 @@ namespace BlogSiteModels.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", t =>
+                        {
+                            t.Property("DislikeCount")
+                                .HasColumnName("DislikeCount1");
+                        });
+                });
+
+            modelBuilder.Entity("BlogSiteModels.Models.Comment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("CommentId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CommentAddTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CommentAddTime");
+
+                    b.Property<string>("CommentText")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)")
+                        .HasColumnName("CommentText");
+
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("BlogSiteModels.Models.User", b =>
@@ -112,8 +164,43 @@ namespace BlogSiteModels.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BlogSiteModels.Models.Comment", b =>
+                {
+                    b.HasOne("BlogSiteModels.Models.Blog", "Blog")
+                        .WithMany("Comments")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("BlogSiteModels.Models.Comment", "ParentComment")
+                        .WithMany("CommentAnswers")
+                        .HasForeignKey("ParentCommentId");
+
+                    b.HasOne("BlogSiteModels.Models.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BlogSiteModels.Models.Blog", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("BlogSiteModels.Models.Comment", b =>
+                {
+                    b.Navigation("CommentAnswers");
+                });
+
             modelBuilder.Entity("BlogSiteModels.Models.User", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("UserBlogs");
                 });
 #pragma warning restore 612, 618

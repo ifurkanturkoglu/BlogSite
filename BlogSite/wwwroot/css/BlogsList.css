@@ -98,6 +98,10 @@
         right: 64px;
         line-height: 48px;
     }
+    .getBlog .blogText {
+        display: block;
+        word-wrap: break-word;
+    }
 
 .comment-section {
     width: 100%;
@@ -204,3 +208,47 @@
     .subComment .subComment {
         margin-left: 20px;
     }
+
+.fa-thumbs-up, .fa-thumbs-down {
+    font-size: 24px; 
+    transition: font-size 0.5s ease-in-out, color 0.5s ease-in-out; 
+}
+
+    
+    .fa-thumbs-up:hover {
+        color: green; 
+    }
+
+    .fa-thumbs-down:hover {
+        color: red;
+    }
+
+    
+    .fa-thumbs-up:hover, .fa-thumbs-down:hover {
+        font-size: 28px; 
+        animation: shake 0.5s; 
+    }
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-3px);
+    }
+
+    50% {
+        transform: translateX(3px);
+    }
+
+    75% {
+        transform: translateX(-3px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+    
+    

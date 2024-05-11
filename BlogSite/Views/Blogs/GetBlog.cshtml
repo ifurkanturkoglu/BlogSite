@@ -9,13 +9,25 @@
     <img class="blogImage" src="@Model.ImageUrl" />
 
     <h5>@Model.BlogDescription</h5>
-    <span>@Model.BlogText</span>
+    <span class="blogText">@Model.BlogText</span>
 
     <div class="blogWriter">
         <label>Yazar</label>
         <br />
         <span style="color:red">@Model.BlogWriter</span>
     </div>
+
+    <button type="button" onclick="LikeBlog()">
+        <i  class="far fa-thumbs-up">
+            <span id="blogLikeCount" >@Model.BlogLikeCount</span>
+        </i>
+    </button>
+
+    <button type="button" onclick="DislikeBlog()">
+        <i class="far fa-thumbs-down">
+            <span id ="blogDislikeCount">@Model.BlogDislikeCount</span>
+        </i>
+    </button>
 
     <div id="commentList" class="comments-section">
 
@@ -41,7 +53,7 @@
                         <div id="subComment" class="subComment">
                             <label>---------------</label>
                             <br />
-                            <label>@answer.CommentId</label>
+                            <label>@answer.User?.UserName</label>
                             <br />
                             <label>@answer.CommentText</label>
                             <button onclick="toggleFunctions(@answer.CommentId)">Yanıtla</button>
@@ -65,7 +77,7 @@
         <div class="comment-section">
             <h2>Yorum Yap</h2>
             <form id="comment">
-                <textarea asp-for="BlogText" id="commentText" name="comment" placeholder="Yorum" required></textarea>
+                <textarea  id="commentText" name="BlogText" placeholder="Yorum" required></textarea>
                 <button type="submit">Gönder</button>
             </form>
         </div>
@@ -83,29 +95,29 @@
 
     IEnumerable<object> RenderRecursiveComment(ICollection<Comment> comments)
     {
-        @if (comments != null)
+    @if (comments != null)
         {
 
 
-            @foreach (var answer in comments)
+    @foreach (var answer in comments)
             {
-                <div id="subComment" class="subComment">
-                    <label>---------------</label>
-                    <br />
-                    <label>@answer.UserId</label>
-                    <br />
-                    <label>@answer.CommentText</label>
-                    <button onclick="toggleFunctions(@answer.CommentId)">Yanıtla</button>
-                    <div id="subAnswer_@answer.CommentId" style="display:none">
-                    </div>
-                    @if (answer.CommentAnswers != null && answer.CommentAnswers.Any())
+                            <div id="subComment" class="subComment">
+                                <label>---------------</label>
+                                <br />
+                                <label>@answer.UserId</label>
+                                <br />
+                                <label>@answer.CommentText</label>
+                                <button onclick="toggleFunctions(@answer.CommentId)">Yanıtla</button>
+                                <div id="subAnswer_@answer.CommentId" style="display:none">
+                                </div>
+                                @if (answer.CommentAnswers != null && answer.CommentAnswers.Any())
                     {
                         foreach (var subAnswer in RenderRecursiveComment(answer.CommentAnswers))
                         {
                             yield return subAnswer;
                         }
                     }
-                </div>
+                            </div>
             }
         }
     }
@@ -129,7 +141,6 @@
 </script>
 
 <script>
-    console.log("girdi");
     function commentAnswerToggle(itemId) {
         $.ajax({
             type: 'GET',
@@ -179,6 +190,35 @@
     });
 </script>
 
+<script>
+
+    function LikeBlog() {
+        var blogId = window.location.pathname.split('/').pop();
+        $.ajax({
+            url: "/Blogs/LikeOrDislikeBlog/" + blogId,
+            type:"POST",
+            data: {isLike:true},
+            success: function (data) {
+                $('#blogLikeCount').text(data.likeCount);
+            }
+
+        })
+    }
+</script>
+<script>
+    function DislikeBlog(){
+    var blogId = window.location.pathname.split('/').pop();
+        $.ajax({
+            url: "/Blogs/LikeOrDislikeBlog/" + blogId,
+            type:"POST",
+            data: { isLike: false },
+            success:function(data){
+                $('#blogDislikeCount').text(data.dislikeCount);
+            }
+        })
+    }
+
+</script>
 
 
 

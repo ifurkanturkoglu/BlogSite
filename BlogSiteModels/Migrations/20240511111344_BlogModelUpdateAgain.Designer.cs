@@ -4,6 +4,7 @@ using BlogSiteModels.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogSiteModels.Migrations
 {
     [DbContext(typeof(BlogSiteDbContext))]
-    partial class BlogSiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240511111344_BlogModelUpdateAgain")]
+    partial class BlogModelUpdateAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +73,6 @@ namespace BlogSiteModels.Migrations
                         .HasDefaultValue(0)
                         .HasColumnName("LikeCount");
 
-                    b.Property<int>("MyProperty")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
@@ -120,39 +120,6 @@ namespace BlogSiteModels.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("BlogSiteModels.Models.LikeAndDislikeBlog", b =>
-                {
-                    b.Property<int>("LikeAndDislikeBlogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("LikeAndDislikeBlogId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeAndDislikeBlogId"));
-
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int")
-                        .HasColumnName("BlogId");
-
-                    b.Property<bool>("IsDisliked")
-                        .HasColumnType("bit")
-                        .HasColumnName("IsDisliked");
-
-                    b.Property<bool>("IsLiked")
-                        .HasColumnType("bit")
-                        .HasColumnName("IsLiked");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("UserName");
-
-                    b.HasKey("LikeAndDislikeBlogId");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("LikeAndDislikeBlogs");
                 });
 
             modelBuilder.Entity("BlogSiteModels.Models.User", b =>
@@ -219,20 +186,8 @@ namespace BlogSiteModels.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogSiteModels.Models.LikeAndDislikeBlog", b =>
-                {
-                    b.HasOne("BlogSiteModels.Models.Blog", "Blog")
-                        .WithMany("BlogLikeAndDislike")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Blog");
-                });
-
             modelBuilder.Entity("BlogSiteModels.Models.Blog", b =>
                 {
-                    b.Navigation("BlogLikeAndDislike");
-
                     b.Navigation("Comments");
                 });
 

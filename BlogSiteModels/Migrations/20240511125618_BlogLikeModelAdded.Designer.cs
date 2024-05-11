@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogSiteModels.Migrations
 {
     [DbContext(typeof(BlogSiteDbContext))]
-    [Migration("20240504120230_CommentModelAdded")]
-    partial class CommentModelAdded
+    [Migration("20240511125618_BlogLikeModelAdded")]
+    partial class BlogLikeModelAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,10 +56,25 @@ namespace BlogSiteModels.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("BlogTitle");
 
+                    b.Property<int>("DislikeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("DislikeCount");
+
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ImageUrl");
+
+                    b.Property<int>("LikeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("LikeCount");
+
+                    b.Property<int>("MyProperty")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
@@ -89,8 +104,8 @@ namespace BlogSiteModels.Migrations
 
                     b.Property<string>("CommentText")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)")
                         .HasColumnName("CommentText");
 
                     b.Property<int?>("ParentCommentId")
@@ -108,6 +123,34 @@ namespace BlogSiteModels.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("BlogSiteModels.Models.LikeAndDislikeBlog", b =>
+                {
+                    b.Property<int>("LikeAndDislikeBlogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeAndDislikeBlogId"));
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDisliked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsLiked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LikeAndDislikeBlogId");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("LikeAndDislikeBlog");
                 });
 
             modelBuilder.Entity("BlogSiteModels.Models.User", b =>
@@ -174,8 +217,20 @@ namespace BlogSiteModels.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BlogSiteModels.Models.LikeAndDislikeBlog", b =>
+                {
+                    b.HasOne("BlogSiteModels.Models.Blog", "Blog")
+                        .WithMany("BlogLikeAndDislike")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Blog");
+                });
+
             modelBuilder.Entity("BlogSiteModels.Models.Blog", b =>
                 {
+                    b.Navigation("BlogLikeAndDislike");
+
                     b.Navigation("Comments");
                 });
 

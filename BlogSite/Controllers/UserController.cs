@@ -10,6 +10,7 @@ namespace BlogSite.Controllers
 {
     public class UserController : Controller
     {
+
         BlogSiteDbContext context;
 
         List<Claim> claims = new List<Claim>();
@@ -28,6 +29,7 @@ namespace BlogSite.Controllers
         [HttpPost]
         public IActionResult Register(LoginViewModel model)
         {
+            //Burada userType a göre farklı işlemler yapılabilir.
 
             if (!ModelState.IsValid)
             {
@@ -38,7 +40,7 @@ namespace BlogSite.Controllers
             {
                 UserName = model.UserName,
                 Password = model.Password,
-                Type = UserType.User
+                Type = UserType.Admin
             };
 
 
