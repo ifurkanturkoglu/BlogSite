@@ -11,7 +11,7 @@
 
         public bool UserIsAuthenticate()
         {
-            return httpContextAccessor.HttpContext.Request.Cookies.ContainsKey(".AspNetCore.Cookies");
+            return httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
         }
     }
 }

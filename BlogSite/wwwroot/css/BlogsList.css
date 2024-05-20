@@ -228,7 +228,12 @@
         font-size: 28px; 
         animation: shake 0.5s; 
     }
-
+.liked{
+    color:green;
+}
+.disliked{
+    color:red
+}
 @keyframes shake {
     0% {
         transform: translateX(0);

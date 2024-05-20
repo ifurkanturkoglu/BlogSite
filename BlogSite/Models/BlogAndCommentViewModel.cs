@@ -15,6 +15,7 @@ namespace BlogSite.Models
         public string ImageUrl { get; set; } = null!;
         public int BlogLikeCount { get; set; }
         public int BlogDislikeCount { get; set; }
+        public bool? IsLiked { get; set; }
         public string? BlogWriter { get; set; }
         public ICollection<CommentViewModel>? Comments { get; set; }
     }

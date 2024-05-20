@@ -17,8 +17,6 @@ namespace BlogSiteModels.Relations
 
             builder.Property(e => e.BlogId).HasColumnName("BlogId").IsRequired();
 
-            builder.Property(e => e.IsDisliked).HasColumnName("IsDisliked").IsRequired();
-
             builder.Property(e => e.IsLiked).HasColumnName("IsLiked").IsRequired();
 
             builder.Property(e => e.UserName).HasColumnName("UserName").IsRequired();
