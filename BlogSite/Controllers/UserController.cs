@@ -13,7 +13,7 @@ namespace BlogSite.Controllers
 
         BlogSiteDbContext context;
 
-        List<Claim> claims = new List<Claim>();
+        
 
         public UserController(BlogSiteDbContext _context)
         {
@@ -78,7 +78,7 @@ namespace BlogSite.Controllers
                 ViewBag.Mesaj = "Giriş Başarılı..";
                 //Bu kısımda session yapılacak.
 
-
+List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Role, (user.Type == UserType.Admin ? UserType.Admin : UserType.User).ToString()));
                 claims.Add(new Claim(ClaimTypes.Name, model.UserName));
 
